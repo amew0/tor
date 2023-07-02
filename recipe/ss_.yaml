@@ -1,0 +1,12 @@
+# draft for the search space 
+# scale is n : [0.33, 0.25, 1024]
+# will use this to build mod yolov8n.yaml
+
+Conv: [7,'?']
+
+# if from backbone 2 args elif from head 1 arg
+C2f : [8,'?']
+SPPF : [1,1024,5]
+nn.Upsample : [2,'?']
+Concat : [4,'?']
+Detect : [1,'?']
