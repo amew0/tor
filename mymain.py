@@ -1,8 +1,14 @@
 # everything starts wz a draft
 # my draft of NSGA2 algorithm for YOLO (for now yeah)
+import gc
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 # os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:20480"
+
+import torch
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+torch.cuda.set_per_process_memory_fraction(0.5, 0)
+
 
 
 import sys
@@ -599,9 +605,9 @@ def evaluate_population(pop):
         p['latency'] = random.random()
         p['memory'] = random.random()
 
-        for x in ["memory", "latency", "accuracy_drop", "energy"]:
+        '''for x in ["memory", "latency", "accuracy_drop", "energy"]:
             if x in p:
-               print(f"OPT eval {x} = {p[x]}")
+               print(f"OPT eval {x} = {p[x]}")'''
 
         # save the previous version of the cache
         # because of concurrent processes (it may destroy the file)
@@ -680,6 +686,7 @@ def wrap_train_test(gene):
     save_cfg = f'{args.new}/{gene}.yaml'
     try:
         model = YOLO(save_cfg)
+        model.to(device)
     except RuntimeError as rte:
         return runid, 0
     except ValueError as ve:
@@ -715,7 +722,8 @@ def wrap_train_test(gene):
             print('No weights are provided. Will test using random initialized weights.')
     # test_acc = test(model=eval_model, data=(x_test_current, y_test), args=args)
     test_acc = test(model=model, data="coco128.yaml", args=args)
-   
+    torch.cuda.empty_cache()
+    gc.collect()
     # tf.keras.backend.clear_session()
     # K.clear_session()
     return runid, test_acc
@@ -917,7 +925,9 @@ def train(model:YOLO, data, args):
     runid = uuid.uuid1().hex
     print("### runid:", runid)
 
-    model.train(data=data, epochs=args.epochs)
+    for epoch in range(args.epochs):
+        print(f"Epoch {epoch}/{args.epochs} - assumption")
+    # model.train(data=data, epochs=args.epochs, workers=1,imgsz=80)
     # callbacks and gpus # not handled ... !
     # explicity compiling, and data generators not required yet
 
@@ -991,11 +1001,10 @@ def train(model:YOLO, data, args):
 # '''
 # '''
 def test(model:YOLO, data, args):
-    metrics = model.val(data)
-    # no need to save anything for now
-    # shutil.rmtree("runs/detect")
-    cm = metrics.confusion_matrix.matrix
-    test_acc = np.trace(cm)/np.sum(cm)
+    # metrics = model.val(data)
+
+    # cm = metrics.confusion_matrix.matrix
+    # test_acc = np.trace(cm)/np.sum(cm)
 
     '''x_test, y_test = data
     y_pred, x_recon = model.predict(x_test, batch_size=100)
@@ -1003,6 +1012,7 @@ def test(model:YOLO, data, args):
     test_acc= np.sum(np.argmax(y_pred, 1) == np.argmax(y_test, 1))/y_test.shape[0]
     print('Test acc:', test_acc)
     '''
+    test_acc = random.random()
     return test_acc
 # '''
 
@@ -1092,11 +1102,11 @@ if __name__ == "__main__":
     parser.add_argument('--new', default='new')
     
     parser.add_argument('--dataset', default='coco128')
-    parser.add_argument('--epochs', default=20, type=int)
+    parser.add_argument('--epochs', default=10, type=int)
     parser.add_argument('--population', default=50, type=int)
     parser.add_argument('--offsprings', default=100, type=int)
     parser.add_argument('--generations', default=5, type=int)
-    parser.add_argument('--output', default="out_DAT", type=str)
+    parser.add_argument('--output', default="results/output/out_DAT", type=str)
     parser.add_argument('--timeout', default=0, type=int, help="Maximal time in seconds for the training, zero = not set")
     parser.add_argument('--gpus', default=1, type=int)
 
