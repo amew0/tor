@@ -2,7 +2,7 @@
 # my draft of NSGA2 algorithm for YOLO (for now yeah)
 import gc
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+# os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 # os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:20480"
 
 import torch
@@ -16,7 +16,7 @@ sys.path.append("/home/ak11263/tor")
 from utils import load_yaml, dump_yaml, size_ss, select_cfg, create_cfg
 
 from ultralytics import YOLO
-
+from tqdm import tqdm
 # import tensorflow as tf 
 import numpy as np
 # from keras import optimizers
@@ -557,8 +557,9 @@ def evaluate_population(pop):
         each individual contains at least "gene" item; the rest of them is calculated later
     """
     popcnt = len(pop)
-    for popid, p in enumerate(pop):
-        print(f"### EVAL candidate {popid}/{popcnt}")
+    enum_pop = tqdm(enumerate(pop))
+    for popid, p in enum_pop:
+        # print(f"### EVAL candidate {popid}/{popcnt}")
         
         cache_name = "cache_"+str(args.dataset)+"_e"+str(args.epochs) 
         try:
@@ -569,6 +570,7 @@ def evaluate_population(pop):
         assert "gene" in p
         if ("accuracy_drop" not in p) or ("gene" not in cache):
             p["runid"], train_acc = wrap_train_test(p["gene"])
+            # p["runid"], train_acc = p['gene'], random.random()
             p["accuracy_drop"] = 1 - train_acc
             from_cache = False
             # note: we are minimizing all parameters! therefore accuracy drop must be evaluated instead of the accuracy
@@ -577,7 +579,9 @@ def evaluate_population(pop):
              from_cache = True
 
         cache[genestr(p["gene"])] = train_acc
-        print("\nTrain accuracy: "+ str(train_acc)+"\n\n")
+        # print("Train accuracy: "+ str(train_acc))
+        enum_pop.set_postfix({'PopID': f'{popid}/{popcnt}', 'TrainAcc': train_acc})
+
         
         # deal wz hw later
         '''
@@ -637,13 +641,13 @@ def wrap_train_test(gene):
     global x_train, y_train, x_test, y_test
     global x_train_shapes, x_test_shapes
     runid = "N/A"
-    print(gene)
+    # print(gene)
 
     with open("results/tested.log", "a") as f:
         f.write(genestr(gene))
         f.write("\n")
     
-    print("\nWrapping...\n")
+    # print("\nWrapping...\n")
     # strategy = tf.distribute.MirroredStrategy()
     # print('Number of devices: {}'.format(strategy.num_replicas_in_sync))
         
@@ -760,6 +764,9 @@ def crowding_reduce(par, number, objs):
         par = [x[0] for x in vals[:-1]]
     return par
 # '''
+def print_(str="",end="\n"):
+    sys.stdout.write(f"{str}{end}")
+    sys.stdout.flush()
 def run_NSGA2(metrics, inshape, p_size = 2, q_size = 2, generations=5, mutation_rate = 0.1):
     """ Heuristic optimization NSGA2 algorithm; 
         metrics - which parameters should be optimized, see evaluate_population
@@ -777,26 +784,29 @@ def run_NSGA2(metrics, inshape, p_size = 2, q_size = 2, generations=5, mutation_
     start = time.time()
     random.seed()
     
-    # random initial population Pt
-    parent = []
-    for i in range(p_size):
-        # parent.append({"gene" : random_configuration(inshape[0], inshape[1], inshape[2], inshape[3]) }) # (insize, inchannels, incapsules, n_classes)
-        parent.append({"gene" : random_configuration() }) # (insize, inchannels, incapsules, n_classes)
-    print("\n Evaluate population.\n")
-
-    evaluate_population(parent)
-
     # genetic loop
     print("\nGenetic Loop.\n")
-    for g in range(generations):
+    for g in range(generations+1):
+        print_(f"Generation {g}/{generations}")
+        if g==0:
+            # random initial population Pt
+            parent = []
+            for i in range(p_size):
+                # parent.append({"gene" : random_configuration(inshape[0], inshape[1], inshape[2], inshape[3]) }) # (insize, inchannels, incapsules, n_classes)
+                parent.append({"gene" : random_configuration() }) 
+
+            evaluate_population(parent)
+            continue
         # generate offsprings Qt
         offsprings = []
-        for i in range(int(q_size/2)):
+        # for i in range(int(q_size/2)): # dont know why we need half the size
+        for i in range(q_size):
+            print_(f"\tOffspring {i+1}/{q_size}","\r")
             par_a = random.choice(parent)
-            print(par_a)
+            # print(par_a)
             # print(par_a["gene"][len(par_a["gene"])-3][0])
             par_b = random.choice(parent)
-            print(par_b)
+            # print(par_b)
             # print(par_b["gene"][len(par_b["gene"])-3][0])
 
             # not handled ... !
@@ -876,7 +886,7 @@ def run_NSGA2(metrics, inshape, p_size = 2, q_size = 2, generations=5, mutation_
                 population.pop(i)
 
         parent = next_parent
-        print("gen ", g)
+        # print("gen ", g)
 
         # TODO: I recomend to save the current population to some TMP folder; the name of the results must be unique for each separate run
         # because many runs will run in parallel
@@ -1001,10 +1011,10 @@ def train(model:YOLO, data, args):
 # '''
 # '''
 def test(model:YOLO, data, args):
-    # metrics = model.val(data)
+    metrics = model.val(data)
 
-    # cm = metrics.confusion_matrix.matrix
-    # test_acc = np.trace(cm)/np.sum(cm)
+    cm = metrics.confusion_matrix.matrix
+    test_acc = np.trace(cm)/np.sum(cm)
 
     '''x_test, y_test = data
     y_pred, x_recon = model.predict(x_test, batch_size=100)
@@ -1012,7 +1022,7 @@ def test(model:YOLO, data, args):
     test_acc= np.sum(np.argmax(y_pred, 1) == np.argmax(y_test, 1))/y_test.shape[0]
     print('Test acc:', test_acc)
     '''
-    test_acc = random.random()
+    # test_acc = random.random()
     return test_acc
 # '''
 
@@ -1106,7 +1116,7 @@ if __name__ == "__main__":
     parser.add_argument('--population', default=50, type=int)
     parser.add_argument('--offsprings', default=100, type=int)
     parser.add_argument('--generations', default=5, type=int)
-    parser.add_argument('--output', default="results/output/out_DAT", type=str)
+    parser.add_argument('--output', default="out_DAT", type=str)
     parser.add_argument('--timeout', default=0, type=int, help="Maximal time in seconds for the training, zero = not set")
     parser.add_argument('--gpus', default=1, type=int)
 
@@ -1175,7 +1185,7 @@ if __name__ == "__main__":
 
     np.random.seed(10)
     rets = run_NSGA2(metrics=["accuracy_drop", "energy", "memory", "latency"], inshape=inshape, p_size=args.population, q_size=args.offsprings, generations=args.generations)
-    outfile = f"{args.output}_results.json"
+    outfile = f"{args.save_dir}/{args.output}_results.json"
     json.dump(rets, open(outfile, "wt"), )
 
 
