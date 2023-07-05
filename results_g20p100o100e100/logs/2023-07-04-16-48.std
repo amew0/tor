@@ -1,0 +1,478 @@
+Namespace(load_cfg='recipe/yolov8n.yaml', load_ss='recipe/ss.yaml', new='new', dataset='coco128', epochs=100, population=100, offsprings=100, generations=20, mutation_rate=0.25, output='out_DAT', timeout=0, gpus=1, batch_size=4, max_params=20000000, lr=0.001, lr_decay=0.9, lam_recon=0.392, routings=3, shift_fraction=0.1, debug=False, save_dir='results/data', cache_dir='results/cache', testing=False, weights=None)
+
+Genetic Loop.
+
+Generation 0/20
+Mother (yolov8n.yaml) added
+### runid: 6af859f21a6911eea2ff04421af02197
+### runid: 9b577cea1a6911eea2ff04421af02197
+### runid: f0f81f921a6911eea2ff04421af02197
+### runid: 4026b1641a6a11eea2ff04421af02197
+### runid: 84eb4f4e1a6a11eea2ff04421af02197
+### runid: c6b329b01a6a11eea2ff04421af02197
+### runid: 14ee90101a6b11eea2ff04421af02197
+### runid: 8d6ce8e81a6b11eea2ff04421af02197
+### runid: cbd707761a6b11eea2ff04421af02197
+### runid: 1bbfb79c1a6c11eea2ff04421af02197
+### runid: 6703982c1a6c11eea2ff04421af02197
+### runid: a0faf3e01a6c11eea2ff04421af02197
+### runid: 0ae40e181a6d11eea2ff04421af02197
+### runid: 577205281a6d11eea2ff04421af02197
+### runid: b0e9cf8c1a6d11eea2ff04421af02197
+### runid: eaac82821a6d11eea2ff04421af02197
+### runid: 2c9a19a21a6e11eea2ff04421af02197
+### runid: 80aaf8f41a6e11eea2ff04421af02197
+### runid: cdebac801a6e11eea2ff04421af02197
+### runid: 32cbaeb61a6f11eea2ff04421af02197
+### runid: 96f201561a6f11eea2ff04421af02197
+### runid: 033db06c1a7011eea2ff04421af02197
+### runid: 671fff681a7011eea2ff04421af02197
+### runid: aac54e6c1a7011eea2ff04421af02197
+### runid: f0bd7eda1a7011eea2ff04421af02197
+### runid: 35c559941a7111eea2ff04421af02197
+### runid: 82c892b01a7111eea2ff04421af02197
+### runid: e2e3ac8e1a7111eea2ff04421af02197
+### runid: 2eed75b01a7211eea2ff04421af02197
+### runid: 7d83d8d61a7211eea2ff04421af02197
+### runid: f1ed01341a7211eea2ff04421af02197
+### runid: 3818efa61a7311eea2ff04421af02197
+### runid: 83e0b6a81a7311eea2ff04421af02197
+### runid: cc2e60901a7311eea2ff04421af02197
+### runid: 16c680921a7411eea2ff04421af02197
+### runid: 4f42996a1a7411eea2ff04421af02197
+### runid: 9c4c67e01a7411eea2ff04421af02197
+### runid: e41f4bbe1a7411eea2ff04421af02197
+### runid: 30b4600e1a7511eea2ff04421af02197
+### runid: 7a3bc5b41a7511eea2ff04421af02197
+### runid: c60f16f81a7511eea2ff04421af02197
+### runid: 157056761a7611eea2ff04421af02197
+### runid: 766203761a7611eea2ff04421af02197
+### runid: d250ebf21a7611eea2ff04421af02197
+### runid: 1a98e4001a7711eea2ff04421af02197
+### runid: 7aca12fe1a7711eea2ff04421af02197
+### runid: c238b3c01a7711eea2ff04421af02197
+### runid: 141721ae1a7811eea2ff04421af02197
+### runid: 61d380fe1a7811eea2ff04421af02197
+### runid: ace2444a1a7811eea2ff04421af02197
+### runid: 04f53bce1a7911eea2ff04421af02197
+### runid: 485b066e1a7911eea2ff04421af02197
+### runid: 8c18d55c1a7911eea2ff04421af02197
+### runid: e7edf5381a7911eea2ff04421af02197
+### runid: 2e41f02a1a7a11eea2ff04421af02197
+### runid: 793d2f2c1a7a11eea2ff04421af02197
+### runid: dc00b1381a7a11eea2ff04421af02197
+### runid: 5a65c59a1a7b11eea2ff04421af02197
+### runid: a710437a1a7b11eea2ff04421af02197
+### runid: e6c7f9541a7b11eea2ff04421af02197
+### runid: 28a0a1501a7c11eea2ff04421af02197
+### runid: 72482d6e1a7c11eea2ff04421af02197
+### runid: b312c61a1a7c11eea2ff04421af02197
+### runid: f1f074541a7c11eea2ff04421af02197
+### runid: 3707c63c1a7d11eea2ff04421af02197
+### runid: 859644041a7d11eea2ff04421af02197
+### runid: dfe2d3001a7d11eea2ff04421af02197
+### runid: 2de53df41a7e11eea2ff04421af02197
+### runid: 77fbb1981a7e11eea2ff04421af02197
+### runid: b32573261a7e11eea2ff04421af02197
+### runid: 08ab3c681a7f11eea2ff04421af02197
+### runid: 567e04a21a7f11eea2ff04421af02197
+### runid: 98671d7c1a7f11eea2ff04421af02197
+### runid: e1b766b21a7f11eea2ff04421af02197
+### runid: 27defd581a8011eea2ff04421af02197
+### runid: 841a9d8e1a8011eea2ff04421af02197
+### runid: cf7e95c81a8011eea2ff04421af02197
+### runid: 165a9c081a8111eea2ff04421af02197
+### runid: 699a719a1a8111eea2ff04421af02197
+### runid: afb193021a8111eea2ff04421af02197
+### runid: f48d94801a8111eea2ff04421af02197
+### runid: 455e10241a8211eea2ff04421af02197
+### runid: 8f7c9b301a8211eea2ff04421af02197
+### runid: dc3f88c41a8211eea2ff04421af02197
+### runid: 1ea357361a8311eea2ff04421af02197
+### runid: 69cf1d8a1a8311eea2ff04421af02197
+### runid: b4f9aad21a8311eea2ff04421af02197
+### runid: f90699561a8311eea2ff04421af02197
+### runid: 411166e01a8411eea2ff04421af02197
+### runid: 89cf5be41a8411eea2ff04421af02197
+### runid: decc093a1a8411eea2ff04421af02197
+### runid: 242f960e1a8511eea2ff04421af02197
+### runid: 5ff159f21a8511eea2ff04421af02197
+### runid: 9cb0fe9c1a8511eea2ff04421af02197
+### runid: ed06c8541a8511eea2ff04421af02197
+### runid: 43c931ae1a8611eea2ff04421af02197
+### runid: 865d474e1a8611eea2ff04421af02197
+### runid: bffe26da1a8611eea2ff04421af02197
+### runid: 2a799eb81a8711eea2ff04421af02197
+### runid: 6a086eba1a8711eea2ff04421af02197
+### runid: ad761e9a1a8711eea2ff04421af02197
+
+Evaluation of current population completed
+
+Generation 1/20
+	Offspring 1/100	Offspring 2/100	Offspring 3/100	Offspring 4/100	Offspring 5/100	Offspring 6/100	Offspring 7/100	Offspring 8/100	Offspring 9/100	Offspring 10/100	Offspring 11/100	Offspring 12/100	Offspring 13/100	Offspring 14/100	Offspring 15/100	Offspring 16/100	Offspring 17/100	Offspring 18/100	Offspring 19/100	Offspring 20/100	Offspring 21/100	Offspring 22/100	Offspring 23/100	Offspring 24/100	Offspring 25/100	Offspring 26/100	Offspring 27/100	Offspring 28/100	Offspring 29/100	Offspring 30/100	Offspring 31/100	Offspring 32/100	Offspring 33/100	Offspring 34/100	Offspring 35/100	Offspring 36/100	Offspring 37/100	Offspring 38/100	Offspring 39/100	Offspring 40/100	Offspring 41/100	Offspring 42/100	Offspring 43/100	Offspring 44/100	Offspring 45/100	Offspring 46/100	Offspring 47/100	Offspring 48/100	Offspring 49/100	Offspring 50/100	Offspring 51/100	Offspring 52/100	Offspring 53/100	Offspring 54/100	Offspring 55/100	Offspring 56/100	Offspring 57/100	Offspring 58/100	Offspring 59/100	Offspring 60/100	Offspring 61/100	Offspring 62/100	Offspring 63/100	Offspring 64/100	Offspring 65/100	Offspring 66/100	Offspring 67/100	Offspring 68/100	Offspring 69/100	Offspring 70/100	Offspring 71/100	Offspring 72/100	Offspring 73/100	Offspring 74/100	Offspring 75/100	Offspring 76/100	Offspring 77/100	Offspring 78/100	Offspring 79/100	Offspring 80/100	Offspring 81/100	Offspring 82/100	Offspring 83/100	Offspring 84/100	Offspring 85/100	Offspring 86/100	Offspring 87/100	Offspring 88/100	Offspring 89/100	Offspring 90/100	Offspring 91/100	Offspring 92/100	Offspring 93/100	Offspring 94/100	Offspring 95/100	Offspring 96/100	Offspring 97/100	Offspring 98/100	Offspring 99/100	Offspring 100/100### runid: 2f5e43f61a8811eea2ff04421af02197
+### runid: 64623f301a8811eea2ff04421af02197
+### runid: b19950e01a8811eea2ff04421af02197
+### runid: 000132ca1a8911eea2ff04421af02197
+### runid: 44033d381a8911eea2ff04421af02197
+### runid: 8a104d3e1a8911eea2ff04421af02197
+### runid: fea9abea1a8911eea2ff04421af02197
+### runid: 3c8596a41a8a11eea2ff04421af02197
+### runid: 81b617a81a8a11eea2ff04421af02197
+### runid: 07876a6c1a8b11eea2ff04421af02197
+### runid: 556a5c801a8b11eea2ff04421af02197
+### runid: a1737bca1a8b11eea2ff04421af02197
+### runid: e96ffc141a8b11eea2ff04421af02197
+### runid: 4e25ef601a8c11eea2ff04421af02197
+### runid: 8bbaa4561a8c11eea2ff04421af02197
+### runid: dc8a11dc1a8c11eea2ff04421af02197
+### runid: 288407aa1a8d11eea2ff04421af02197
+### runid: 651adc701a8d11eea2ff04421af02197
+### runid: ab6696101a8d11eea2ff04421af02197
+### runid: f77b37221a8d11eea2ff04421af02197
+### runid: 32df3e301a8e11eea2ff04421af02197
+### runid: 72d762d81a8e11eea2ff04421af02197
+### runid: bf4bf3cc1a8e11eea2ff04421af02197
+### runid: 0a1585b21a8f11eea2ff04421af02197
+### runid: 6f6508521a8f11eea2ff04421af02197
+### runid: cd1007a41a8f11eea2ff04421af02197
+### runid: 1c6ddc221a9011eea2ff04421af02197
+### runid: 653e76a01a9011eea2ff04421af02197
+### runid: e5bdaae41a9011eea2ff04421af02197
+### runid: 3224e1ae1a9111eea2ff04421af02197
+### runid: 8b740db61a9111eea2ff04421af02197
+### runid: d82808421a9111eea2ff04421af02197
+### runid: 1f5ac3bc1a9211eea2ff04421af02197
+### runid: 55f875181a9211eea2ff04421af02197
+### runid: a23d9e081a9211eea2ff04421af02197
+### runid: e7c384c41a9211eea2ff04421af02197
+### runid: 6ad538621a9311eea2ff04421af02197
+### runid: b6a965b01a9311eea2ff04421af02197
+### runid: 046054d01a9411eea2ff04421af02197
+### runid: 3d789dc21a9411eea2ff04421af02197
+### runid: 9c8dd8ea1a9411eea2ff04421af02197
+### runid: e611fc3a1a9411eea2ff04421af02197
+### runid: 336f160c1a9511eea2ff04421af02197
+### runid: 8110f7361a9511eea2ff04421af02197
+### runid: 207dd47e1a9611eea2ff04421af02197
+### runid: 744256161a9611eea2ff04421af02197
+### runid: d47a9b9c1a9611eea2ff04421af02197
+### runid: 102d42f21a9711eea2ff04421af02197
+### runid: 5cbeb9fc1a9711eea2ff04421af02197
+### runid: a6a3d6c41a9711eea2ff04421af02197
+### runid: e3cc199e1a9711eea2ff04421af02197
+### runid: 32f5e0181a9811eea2ff04421af02197
+### runid: 78a63a5e1a9811eea2ff04421af02197
+### runid: c21fe6441a9811eea2ff04421af02197
+### runid: 01043cde1a9911eea2ff04421af02197
+### runid: 4d61065c1a9911eea2ff04421af02197
+### runid: 8dbc27ea1a9911eea2ff04421af02197
+### runid: daf9442a1a9911eea2ff04421af02197
+### runid: 1adab9f21a9a11eea2ff04421af02197
+### runid: 80ec55ac1a9a11eea2ff04421af02197
+### runid: cd56fb681a9a11eea2ff04421af02197
+### runid: 2123f4581a9b11eea2ff04421af02197
+### runid: 63ad6eb21a9b11eea2ff04421af02197
+### runid: d2e50bfa1a9b11eea2ff04421af02197
+### runid: 06d8bb001a9c11eea2ff04421af02197
+### runid: 49df899c1a9c11eea2ff04421af02197
+### runid: 971b5f2e1a9c11eea2ff04421af02197
+### runid: d78bb98c1a9c11eea2ff04421af02197
+### runid: 1d6079f21a9d11eea2ff04421af02197
+### runid: 736443ce1a9d11eea2ff04421af02197
+### runid: c120fc9c1a9d11eea2ff04421af02197
+### runid: fec86cd81a9d11eea2ff04421af02197
+### runid: 38612c6e1a9e11eea2ff04421af02197
+### runid: 89e22e9e1a9e11eea2ff04421af02197
+### runid: c69963701a9e11eea2ff04421af02197
+### runid: 1381293e1a9f11eea2ff04421af02197
+### runid: 8a49db7e1a9f11eea2ff04421af02197
+### runid: d890b6ea1a9f11eea2ff04421af02197
+### runid: 1f4314021aa011eea2ff04421af02197
+### runid: 5771be8c1aa011eea2ff04421af02197
+### runid: bc89edbc1aa011eea2ff04421af02197
+### runid: 0855fec01aa111eea2ff04421af02197
+### runid: 764b5bb41aa111eea2ff04421af02197
+### runid: ddd31c5e1aa111eea2ff04421af02197
+### runid: 23bfd5041aa211eea2ff04421af02197
+### runid: 652c0fc61aa211eea2ff04421af02197
+### runid: f6901f8e1aa211eea2ff04421af02197
+### runid: 4efe5f001aa311eea2ff04421af02197
+### runid: beba059c1aa311eea2ff04421af02197
+### runid: 1137e26c1aa411eea2ff04421af02197
+### runid: 5863375e1aa411eea2ff04421af02197
+### runid: 9ad076921aa411eea2ff04421af02197
+### runid: e82679001aa411eea2ff04421af02197
+### runid: 540e50521aa511eea2ff04421af02197
+### runid: 9735bae61aa511eea2ff04421af02197
+### runid: de8fb3e21aa511eea2ff04421af02197
+### runid: 2ba1915a1aa611eea2ff04421af02197
+### runid: 7b7538081aa611eea2ff04421af02197
+### runid: c5bd31ae1aa611eea2ff04421af02197
+### runid: 0c738eae1aa711eea2ff04421af02197
+
+Evaluation of current population completed
+
+Generation 2/20
+	Offspring 1/100	Offspring 2/100	Offspring 3/100	Offspring 4/100	Offspring 5/100	Offspring 6/100	Offspring 7/100	Offspring 8/100	Offspring 9/100	Offspring 10/100	Offspring 11/100	Offspring 12/100	Offspring 13/100	Offspring 14/100	Offspring 15/100	Offspring 16/100	Offspring 17/100	Offspring 18/100	Offspring 19/100	Offspring 20/100	Offspring 21/100	Offspring 22/100	Offspring 23/100	Offspring 24/100	Offspring 25/100	Offspring 26/100	Offspring 27/100	Offspring 28/100	Offspring 29/100	Offspring 30/100	Offspring 31/100	Offspring 32/100	Offspring 33/100	Offspring 34/100	Offspring 35/100	Offspring 36/100	Offspring 37/100	Offspring 38/100	Offspring 39/100	Offspring 40/100	Offspring 41/100	Offspring 42/100	Offspring 43/100	Offspring 44/100	Offspring 45/100	Offspring 46/100	Offspring 47/100	Offspring 48/100	Offspring 49/100	Offspring 50/100	Offspring 51/100	Offspring 52/100	Offspring 53/100	Offspring 54/100	Offspring 55/100	Offspring 56/100	Offspring 57/100	Offspring 58/100	Offspring 59/100	Offspring 60/100	Offspring 61/100	Offspring 62/100	Offspring 63/100	Offspring 64/100	Offspring 65/100	Offspring 66/100	Offspring 67/100	Offspring 68/100	Offspring 69/100	Offspring 70/100	Offspring 71/100	Offspring 72/100	Offspring 73/100	Offspring 74/100	Offspring 75/100	Offspring 76/100	Offspring 77/100	Offspring 78/100	Offspring 79/100	Offspring 80/100	Offspring 81/100	Offspring 82/100	Offspring 83/100	Offspring 84/100	Offspring 85/100	Offspring 86/100	Offspring 87/100	Offspring 88/100	Offspring 89/100	Offspring 90/100	Offspring 91/100	Offspring 92/100	Offspring 93/100	Offspring 94/100	Offspring 95/100	Offspring 96/100	Offspring 97/100	Offspring 98/100	Offspring 99/100	Offspring 100/100### runid: 864e77161aa711eea2ff04421af02197
+### runid: c04749841aa711eea2ff04421af02197
+### runid: 0ca6426c1aa811eea2ff04421af02197
+### runid: 556b11da1aa811eea2ff04421af02197
+### runid: a44c75fa1aa811eea2ff04421af02197
+### runid: eec860441aa811eea2ff04421af02197
+### runid: 3f31d2041aa911eea2ff04421af02197
+### runid: 93839dec1aa911eea2ff04421af02197
+### runid: dcf6be641aa911eea2ff04421af02197
+### runid: 151f1f701aaa11eea2ff04421af02197
+### runid: 640ef7901aaa11eea2ff04421af02197
+### runid: b3a58ba21aaa11eea2ff04421af02197
+### runid: f9a712101aaa11eea2ff04421af02197
+### runid: 5eee63941aab11eea2ff04421af02197
+### runid: c1a5a5ec1aab11eea2ff04421af02197
+### runid: 005e5b9e1aac11eea2ff04421af02197
+### runid: 517ef95c1aac11eea2ff04421af02197
+### runid: a7805ecc1aac11eea2ff04421af02197
+### runid: e2452fc41aac11eea2ff04421af02197
+### runid: 1c8515d21aad11eea2ff04421af02197
+### runid: 6f0363901aad11eea2ff04421af02197
+### runid: d3fe93f01aad11eea2ff04421af02197
+### runid: 1d1d4d7e1aae11eea2ff04421af02197
+### runid: 63f456ac1aae11eea2ff04421af02197
+### runid: ae253c0a1aae11eea2ff04421af02197
+### runid: f99a3d201aae11eea2ff04421af02197
+### runid: 52bdcd861aaf11eea2ff04421af02197
+### runid: 9f0362281aaf11eea2ff04421af02197
+### runid: 18878f701ab011eea2ff04421af02197
+### runid: 587b2c681ab011eea2ff04421af02197
+### runid: 981d2a9c1ab011eea2ff04421af02197
+### runid: e4af07721ab011eea2ff04421af02197
+### runid: 69ae11701ab111eea2ff04421af02197
+### runid: a07841941ab111eea2ff04421af02197
+### runid: dffac38c1ab111eea2ff04421af02197
+### runid: 278a416e1ab211eea2ff04421af02197
+### runid: 7574a31a1ab211eea2ff04421af02197
+### runid: c9ddd1381ab211eea2ff04421af02197
+### runid: 0fd889e41ab311eea2ff04421af02197
+### runid: 568a4f941ab311eea2ff04421af02197
+### runid: c60ace021ab311eea2ff04421af02197
+### runid: 14af1c981ab411eea2ff04421af02197
+### runid: 8b4a92e21ab411eea2ff04421af02197
+### runid: 0bcaba141ab511eea2ff04421af02197
+### runid: 41c0f7501ab511eea2ff04421af02197
+### runid: 8889d2e21ab511eea2ff04421af02197
+### runid: db4640ec1ab511eea2ff04421af02197
+### runid: 7b5df1a61ab611eea2ff04421af02197
+### runid: 1a4518621ab711eea2ff04421af02197
+### runid: 7ad62d2e1ab711eea2ff04421af02197
+### runid: c45ffa4c1ab711eea2ff04421af02197
+### runid: 5c6a37801ab811eea2ff04421af02197
+### runid: a62847e01ab811eea2ff04421af02197
+### runid: fd69d60e1ab811eea2ff04421af02197
+### runid: 52b40c4c1ab911eea2ff04421af02197
+### runid: 9c07855e1ab911eea2ff04421af02197
+### runid: e5ef2a281ab911eea2ff04421af02197
+### runid: 36e72dcc1aba11eea2ff04421af02197
+### runid: 83d6fb761aba11eea2ff04421af02197
+### runid: c42b04921aba11eea2ff04421af02197
+### runid: 0f8f59a61abb11eea2ff04421af02197
+### runid: 4e5dfd861abb11eea2ff04421af02197
+### runid: 968e0bd21abb11eea2ff04421af02197
+### runid: d0e61ee61abb11eea2ff04421af02197
+### runid: 22c5da8a1abc11eea2ff04421af02197
+### runid: 6a64278e1abc11eea2ff04421af02197
+### runid: b88c40b81abc11eea2ff04421af02197
+### runid: eb7b539c1abc11eea2ff04421af02197
+### runid: 2d909e7c1abd11eea2ff04421af02197
+### runid: 66ac4b341abd11eea2ff04421af02197
+### runid: a76119de1abd11eea2ff04421af02197
+### runid: ecdfc2761abd11eea2ff04421af02197
+### runid: 31c6b62e1abe11eea2ff04421af02197
+### runid: 9b30593a1abe11eea2ff04421af02197
+### runid: e82ad6de1abe11eea2ff04421af02197
+### runid: 3715b7961abf11eea2ff04421af02197
+### runid: 8999a2ca1abf11eea2ff04421af02197
+### runid: dfd2575e1abf11eea2ff04421af02197
+### runid: 2084dbe61ac011eea2ff04421af02197
+### runid: 67729ed01ac011eea2ff04421af02197
+### runid: ad8e16421ac011eea2ff04421af02197
+### runid: fc69de4a1ac011eea2ff04421af02197
+### runid: 49d5a0741ac111eea2ff04421af02197
+### runid: 9dcb7afa1ac111eea2ff04421af02197
+### runid: e9e7ae901ac111eea2ff04421af02197
+### runid: 35bf83b01ac211eea2ff04421af02197
+### runid: bddc811c1ac211eea2ff04421af02197
+### runid: 0e50cfb81ac311eea2ff04421af02197
+### runid: 5824a0881ac311eea2ff04421af02197
+### runid: be6cea081ac311eea2ff04421af02197
+### runid: 127de1561ac411eea2ff04421af02197
+### runid: 4e27d8921ac411eea2ff04421af02197
+### runid: 998532b21ac411eea2ff04421af02197
+### runid: 068442cc1ac511eea2ff04421af02197
+### runid: 4ee78ace1ac511eea2ff04421af02197
+### runid: a62c57a61ac511eea2ff04421af02197
+### runid: 0eb2f6cc1ac611eea2ff04421af02197
+### runid: 5a03d3c61ac611eea2ff04421af02197
+### runid: b1ef3f581ac611eea2ff04421af02197
+### runid: f2a86e5c1ac611eea2ff04421af02197
+
+Evaluation of current population completed
+
+Generation 3/20
+	Offspring 1/100	Offspring 2/100	Offspring 3/100	Offspring 4/100	Offspring 5/100	Offspring 6/100	Offspring 7/100	Offspring 8/100	Offspring 9/100	Offspring 10/100	Offspring 11/100	Offspring 12/100	Offspring 13/100	Offspring 14/100	Offspring 15/100	Offspring 16/100	Offspring 17/100	Offspring 18/100	Offspring 19/100	Offspring 20/100	Offspring 21/100	Offspring 22/100	Offspring 23/100	Offspring 24/100	Offspring 25/100	Offspring 26/100	Offspring 27/100	Offspring 28/100	Offspring 29/100	Offspring 30/100	Offspring 31/100	Offspring 32/100	Offspring 33/100	Offspring 34/100	Offspring 35/100	Offspring 36/100	Offspring 37/100	Offspring 38/100	Offspring 39/100	Offspring 40/100	Offspring 41/100	Offspring 42/100	Offspring 43/100	Offspring 44/100	Offspring 45/100	Offspring 46/100	Offspring 47/100	Offspring 48/100	Offspring 49/100	Offspring 50/100	Offspring 51/100	Offspring 52/100	Offspring 53/100	Offspring 54/100	Offspring 55/100	Offspring 56/100	Offspring 57/100	Offspring 58/100	Offspring 59/100	Offspring 60/100	Offspring 61/100	Offspring 62/100	Offspring 63/100	Offspring 64/100	Offspring 65/100	Offspring 66/100	Offspring 67/100	Offspring 68/100	Offspring 69/100	Offspring 70/100	Offspring 71/100	Offspring 72/100	Offspring 73/100	Offspring 74/100	Offspring 75/100	Offspring 76/100	Offspring 77/100	Offspring 78/100	Offspring 79/100	Offspring 80/100	Offspring 81/100	Offspring 82/100	Offspring 83/100	Offspring 84/100	Offspring 85/100	Offspring 86/100	Offspring 87/100	Offspring 88/100	Offspring 89/100	Offspring 90/100	Offspring 91/100	Offspring 92/100	Offspring 93/100	Offspring 94/100	Offspring 95/100	Offspring 96/100	Offspring 97/100	Offspring 98/100	Offspring 99/100	Offspring 100/100### runid: 6f5492b41ac711eea2ff04421af02197
+### runid: b6ece3d81ac711eea2ff04421af02197
+### runid: 07388c201ac811eea2ff04421af02197
+### runid: 4b55f5501ac811eea2ff04421af02197
+### runid: c53080fc1ac811eea2ff04421af02197
+### runid: 48ba09481ac911eea2ff04421af02197
+### runid: 9b9df1ec1ac911eea2ff04421af02197
+### runid: ea3c65861ac911eea2ff04421af02197
+### runid: 28d031ec1aca11eea2ff04421af02197
+### runid: 7460d49a1aca11eea2ff04421af02197
+### runid: ae35462e1aca11eea2ff04421af02197
+### runid: fedd64621aca11eea2ff04421af02197
+### runid: 512f53421acb11eea2ff04421af02197
+### runid: b661d3481acb11eea2ff04421af02197
+### runid: 16c119c41acc11eea2ff04421af02197
+### runid: 5f73d3821acc11eea2ff04421af02197
+### runid: a8253a761acc11eea2ff04421af02197
+### runid: f55b76de1acc11eea2ff04421af02197
+### runid: 488b58421acd11eea2ff04421af02197
+### runid: 9563a7c81acd11eea2ff04421af02197
+### runid: e5fa47be1acd11eea2ff04421af02197
+### runid: 6af8a21c1ace11eea2ff04421af02197
+### runid: be5a43701ace11eea2ff04421af02197
+### runid: 005135ea1acf11eea2ff04421af02197
+### runid: 4f854c3c1acf11eea2ff04421af02197
+### runid: 9a83ae401acf11eea2ff04421af02197
+### runid: d74007701acf11eea2ff04421af02197
+### runid: 21a744b81ad011eea2ff04421af02197
+### runid: 6d5bf1ce1ad011eea2ff04421af02197
+### runid: b2d004201ad011eea2ff04421af02197
+### runid: 089c67901ad111eea2ff04421af02197
+### runid: 6b1ad9561ad111eea2ff04421af02197
+### runid: bd2f60c21ad111eea2ff04421af02197
+### runid: 3c23125c1ad211eea2ff04421af02197
+### runid: 7b32e2b01ad211eea2ff04421af02197
+### runid: c2eaf5f21ad211eea2ff04421af02197
+### runid: 133742361ad311eea2ff04421af02197
+### runid: 652225021ad311eea2ff04421af02197
+### runid: bd13ed0e1ad311eea2ff04421af02197
+### runid: 0ae2b81c1ad411eea2ff04421af02197
+### runid: 565496e41ad411eea2ff04421af02197
+### runid: f61fbe101ad411eea2ff04421af02197
+### runid: 420b43441ad511eea2ff04421af02197
+### runid: 89c9b9721ad511eea2ff04421af02197
+### runid: db89674e1ad511eea2ff04421af02197
+### runid: 34168a901ad611eea2ff04421af02197
+### runid: 74ec07b61ad611eea2ff04421af02197
+### runid: 149f90201ad711eea2ff04421af02197
+### runid: 70d430bc1ad711eea2ff04421af02197
+### runid: d0d594601ad711eea2ff04421af02197
+### runid: 24dc490a1ad811eea2ff04421af02197
+### runid: 6fdeb0001ad811eea2ff04421af02197
+### runid: ba82ad141ad811eea2ff04421af02197
+### runid: 35bf2a021ad911eea2ff04421af02197
+### runid: cadcf8301ad911eea2ff04421af02197
+### runid: 1d64fcba1ada11eea2ff04421af02197
+### runid: 663a59621ada11eea2ff04421af02197
+### runid: bc381e761ada11eea2ff04421af02197
+### runid: 08bd167a1adb11eea2ff04421af02197
+### runid: 48860dfc1adb11eea2ff04421af02197
+### runid: 885de5081adb11eea2ff04421af02197
+### runid: c6d162741adb11eea2ff04421af02197
+### runid: 17d3394a1adc11eea2ff04421af02197
+### runid: 61f4106c1adc11eea2ff04421af02197
+### runid: acb0d4d21adc11eea2ff04421af02197
+### runid: f59602801adc11eea2ff04421af02197
+### runid: 49c254941add11eea2ff04421af02197
+### runid: 7cf66c921add11eea2ff04421af02197
+### runid: bef79d321add11eea2ff04421af02197
+### runid: 0c8531221ade11eea2ff04421af02197
+### runid: 4d0342d41ade11eea2ff04421af02197
+### runid: 91b35fae1ade11eea2ff04421af02197
+### runid: d61dedf81ade11eea2ff04421af02197
+### runid: 2006c37c1adf11eea2ff04421af02197
+### runid: 6d01700a1adf11eea2ff04421af02197
+### runid: a75b67561adf11eea2ff04421af02197
+### runid: 0b7f55ee1ae011eea2ff04421af02197
+### runid: 5562cbdc1ae011eea2ff04421af02197
+### runid: 9b1b2cd21ae011eea2ff04421af02197
+### runid: f4c083fe1ae011eea2ff04421af02197
+### runid: 43465b661ae111eea2ff04421af02197
+### runid: 949b3dc41ae111eea2ff04421af02197
+### runid: dbfc02661ae111eea2ff04421af02197
+### runid: 2ab0a5e21ae211eea2ff04421af02197
+### runid: 6ec769c81ae211eea2ff04421af02197
+### runid: c4739fc21ae211eea2ff04421af02197
+### runid: 0a603bd01ae311eea2ff04421af02197
+### runid: 6aea21d21ae311eea2ff04421af02197
+### runid: e99090841ae311eea2ff04421af02197
+### runid: 602af9c81ae411eea2ff04421af02197
+### runid: b37d7c861ae411eea2ff04421af02197
+### runid: 00ebdf941ae511eea2ff04421af02197
+### runid: 4bac1db41ae511eea2ff04421af02197
+### runid: b8cda9e41ae511eea2ff04421af02197
+### runid: 3a75d0de1ae611eea2ff04421af02197
+### runid: 807771d21ae611eea2ff04421af02197
+### runid: 04873f841ae711eea2ff04421af02197
+### runid: 532ed4801ae711eea2ff04421af02197
+### runid: b442b4581ae711eea2ff04421af02197
+### runid: 0acb14f01ae811eea2ff04421af02197
+
+Evaluation of current population completed
+
+Generation 4/20
+	Offspring 1/100	Offspring 2/100	Offspring 3/100	Offspring 4/100	Offspring 5/100	Offspring 6/100	Offspring 7/100	Offspring 8/100	Offspring 9/100	Offspring 10/100	Offspring 11/100	Offspring 12/100	Offspring 13/100	Offspring 14/100	Offspring 15/100	Offspring 16/100	Offspring 17/100	Offspring 18/100	Offspring 19/100	Offspring 20/100	Offspring 21/100	Offspring 22/100	Offspring 23/100	Offspring 24/100	Offspring 25/100	Offspring 26/100	Offspring 27/100	Offspring 28/100	Offspring 29/100	Offspring 30/100	Offspring 31/100	Offspring 32/100	Offspring 33/100	Offspring 34/100	Offspring 35/100	Offspring 36/100	Offspring 37/100	Offspring 38/100	Offspring 39/100	Offspring 40/100	Offspring 41/100	Offspring 42/100	Offspring 43/100	Offspring 44/100	Offspring 45/100	Offspring 46/100	Offspring 47/100	Offspring 48/100	Offspring 49/100	Offspring 50/100	Offspring 51/100	Offspring 52/100	Offspring 53/100	Offspring 54/100	Offspring 55/100	Offspring 56/100	Offspring 57/100	Offspring 58/100	Offspring 59/100	Offspring 60/100	Offspring 61/100	Offspring 62/100	Offspring 63/100	Offspring 64/100	Offspring 65/100	Offspring 66/100	Offspring 67/100	Offspring 68/100	Offspring 69/100	Offspring 70/100	Offspring 71/100	Offspring 72/100	Offspring 73/100	Offspring 74/100	Offspring 75/100	Offspring 76/100	Offspring 77/100	Offspring 78/100	Offspring 79/100	Offspring 80/100	Offspring 81/100	Offspring 82/100	Offspring 83/100	Offspring 84/100	Offspring 85/100	Offspring 86/100	Offspring 87/100	Offspring 88/100	Offspring 89/100	Offspring 90/100	Offspring 91/100	Offspring 92/100	Offspring 93/100	Offspring 94/100	Offspring 95/100	Offspring 96/100	Offspring 97/100	Offspring 98/100	Offspring 99/100	Offspring 100/100### runid: 86bb54d01ae811eea2ff04421af02197
+### runid: d02cc4dc1ae811eea2ff04421af02197
+### runid: 192312ae1ae911eea2ff04421af02197
+### runid: 6c7e65e81ae911eea2ff04421af02197
+### runid: b43ad77c1ae911eea2ff04421af02197
+### runid: 07c335921aea11eea2ff04421af02197
+### runid: 6a2ab05c1aea11eea2ff04421af02197
+### runid: b32ec8881aea11eea2ff04421af02197
+### runid: 38dbe75e1aeb11eea2ff04421af02197
+### runid: 9c22592e1aeb11eea2ff04421af02197
+### runid: e8d78a5a1aeb11eea2ff04421af02197
+### runid: 3ab470221aec11eea2ff04421af02197
+### runid: 86bae6a41aec11eea2ff04421af02197
+### runid: eb944dd61aec11eea2ff04421af02197
+### runid: 8660b9121aed11eea2ff04421af02197
+### runid: dfa08bc41aed11eea2ff04421af02197
+### runid: 33ade0721aee11eea2ff04421af02197
+### runid: 86b790921aee11eea2ff04421af02197
+### runid: de09e71e1aee11eea2ff04421af02197
+### runid: 2b21bd061aef11eea2ff04421af02197
+### runid: abcc786a1aef11eea2ff04421af02197
+### runid: f6f408a81aef11eea2ff04421af02197
+### runid: 4570dfb01af011eea2ff04421af02197
+### runid: e995038c1af011eea2ff04421af02197
+### runid: 41a14d601af111eea2ff04421af02197
+### runid: 8ca948a81af111eea2ff04421af02197
+### runid: d875ef3e1af111eea2ff04421af02197
+### runid: 7634d5d21af211eea2ff04421af02197
+### runid: ca5c17d81af211eea2ff04421af02197
+### runid: 1822dae21af311eea2ff04421af02197
+### runid: 70341eda1af311eea2ff04421af02197
+### runid: b8dd9eae1af311eea2ff04421af02197
+### runid: 1a1a53061af411eea2ff04421af02197
+### runid: 691f1bb21af411eea2ff04421af02197
+### runid: a868e5281af411eea2ff04421af02197
+### runid: f0795f501af411eea2ff04421af02197
+### runid: 464520cc1af511eea2ff04421af02197
+### runid: aa3b6a6e1af511eea2ff04421af02197
+### runid: 01b573661af611eea2ff04421af02197
+### runid: 4c5b855e1af611eea2ff04421af02197
+### runid: 8d7dbd721af611eea2ff04421af02197
+### runid: ec065a981af611eea2ff04421af02197
+### runid: 454b543c1af711eea2ff04421af02197
+### runid: 9038a5581af711eea2ff04421af02197
+### runid: d5ab2ae81af711eea2ff04421af02197
+### runid: 2b46f2341af811eea2ff04421af02197
+### runid: 79cf18461af811eea2ff04421af02197
+### runid: 18aa8cb61af911eea2ff04421af02197
+### runid: 6b1f16ce1af911eea2ff04421af02197
+### runid: caccbb3a1af911eea2ff04421af02197
+### runid: 16a266b81afa11eea2ff04421af02197
+### runid: 6e1740f81afa11eea2ff04421af02197
+### runid: b80cf66c1afa11eea2ff04421af02197
+### runid: f7c564741afa11eea2ff04421af02197
+### runid: 4796837a1afb11eea2ff04421af02197

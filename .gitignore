@@ -4,6 +4,4 @@ __pycache__/
 .py*/
 .vscode/
 new/
-results/cache
-results/logs
-results/tested.log
+results

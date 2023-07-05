@@ -2,8 +2,8 @@
 # my draft of NSGA2 algorithm for YOLO (for now yeah)
 import gc
 import os
-# os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-# os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:20480"
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:128"
 
 import torch
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -14,7 +14,7 @@ torch.cuda.set_per_process_memory_fraction(0.5, 0)
 import sys
 sys.path.append("/home/ak11263/tor")
 from utils import load_yaml, dump_yaml, size_ss, select_cfg, create_cfg
-
+from pathlib import Path
 from ultralytics import YOLO
 from tqdm import tqdm
 # import tensorflow as tf 
@@ -40,31 +40,8 @@ import shutil
 # from keras.utils.layer_utils import count_params
 from copy import deepcopy
 from paretoarchive import PyBspTreeArchive
-# import uuid
 # from timeout_callback import TimeoutCallback
-# import sys
-# sys.path.append("..")
 
-# from keras.backend.tensorflow_backend import set_session
-# config = tf.ConfigProto()
-# config.gpu_options.per_process_gpu_memory_fraction = 0.2 #config.gpu_options.allow_growth = True  # dynamically grow the memory used on the GPU
-# #config.log_device_placement = True  # to log device placement (on which device the operation ran)
-# sess = tf.Session(config=config)
-# set_session(sess)  # set this TensorFlow session as the default session for Keras
-
-
-'''def set_args(a):
-    """ Function for setting of global parameters from another modules such as randlearn """
-    global args
-    args = a'''
-'''def set_data(x_tr, y_tr, x_te, y_te):
-    """ Function for setting of global parameters from another modules such as randlearn """
-    global x_train, y_train, x_test, y_test
-    global x_train_shapes, x_test_shapes
-    x_train, y_train, x_test, y_test = x_tr, y_tr, x_te, y_te
-    x_train_shapes = {}
-    x_test_shapes = {}'''
-# '''
 def resize(data_set, size): 
     X_temp = []
     import scipy
@@ -267,14 +244,23 @@ def resize(data_set, size):
     return gene
 '''
 def random_configuration():
-    selected_cfg = select_cfg(ss)
-    selected_cfg_ = deepcopy(selected_cfg) # because this one will be emptied during search
-    new_cfg = create_cfg(cfg,selected_cfg_)
-    save_cfg_name = str(time.time()).replace('.','')
-    save_cfg = f'{args.new}/{save_cfg_name}.yaml'
-    dump_yaml(new_cfg, save_cfg)
-    # return "yolov8n"
-    return save_cfg_name
+    while True:
+        try:
+            selected_cfg = select_cfg(ss)
+            selected_cfg_ = deepcopy(selected_cfg) # because this one will be emptied during search
+            new_cfg = create_cfg(cfg,selected_cfg_)
+
+            save_cfg_name = str(time.time()).replace('.','')
+            save_cfg = f'{args.new}/{save_cfg_name}.yaml'
+            dump_yaml(new_cfg, save_cfg)
+            m = YOLO(save_cfg)
+            del m
+            # return "yolov8n"
+            return save_cfg_name
+        except RuntimeError as rte:
+            Path(save_cfg).unlink(missing_ok=True)
+        except ValueError as ve:
+            Path(save_cfg).unlink(missing_ok=True)
 
 '''def fix(gene): 
 
@@ -429,20 +415,37 @@ def crossover(par_a, par_b):
     par_b_cfg = load_yaml(f'{args.new}/{par_b}.yaml')
     len_bh = len(par_a_cfg['backbone'] + par_a_cfg['head'])
     # do some checks here to create a reasonable offspring
-    cut = random.randint(0,len_bh-1)
-    offspring_cfg = {}
-    offspring_cfg['nc'] = deepcopy(par_a_cfg['nc']) 
-    offspring_cfg['scales'] = deepcopy(par_a_cfg['scales']) 
-    len_b = len(par_a_cfg['backbone'])
-    if cut < len_b:
-        offspring_cfg['backbone'] = deepcopy(par_a_cfg['backbone'][:cut])+\
-            deepcopy(par_b_cfg['backbone'][cut:])
-        offspring_cfg['head'] = deepcopy(par_b_cfg['head'])
-    else:
-        offspring_cfg['backbone'] = deepcopy(par_a_cfg['backbone'])
-        offspring_cfg['head'] = deepcopy(par_a_cfg['head'][:cut-len_b])+\
-            deepcopy(par_b_cfg['head'][cut-len_b:])
-    return offspring_cfg
+    
+    # so it might not go to infinity
+    tries=0
+    while tries<50:
+        try:
+            cut = random.randint(0,len_bh-1)
+            offspring_cfg = {}
+            offspring_cfg['nc'] = deepcopy(par_a_cfg['nc']) 
+            offspring_cfg['scales'] = deepcopy(par_a_cfg['scales']) 
+            len_b = len(par_a_cfg['backbone'])
+            if cut < len_b:
+                offspring_cfg['backbone'] = deepcopy(par_a_cfg['backbone'][:cut])+\
+                    deepcopy(par_b_cfg['backbone'][cut:])
+                offspring_cfg['head'] = deepcopy(par_b_cfg['head'])
+            else:
+                offspring_cfg['backbone'] = deepcopy(par_a_cfg['backbone'])
+                offspring_cfg['head'] = deepcopy(par_a_cfg['head'][:cut-len_b])+\
+                    deepcopy(par_b_cfg['head'][cut-len_b:])
+                
+            offspring = str(time.time()).replace('.','')
+            save_cfg = f'{args.new}/{offspring}.yaml'
+            dump_yaml(offspring_cfg, save_cfg)
+            m = YOLO(save_cfg)
+            del m
+            return offspring
+        except RuntimeError as rte:
+            Path(save_cfg).unlink(missing_ok=True)
+        except ValueError as ve:
+            Path(save_cfg).unlink(missing_ok=True)
+        tries+=1
+        
 
 '''def mutate(gene): # always mutes also xtraskip if type==2
     
@@ -545,10 +548,9 @@ def crossover(par_a, par_b):
     
     return gene
 '''
-def mutate(gene):
-    # Note that this gene is in its cfg form
+def mutate(offspring):
     # not yet implemented
-    pass
+    return random_configuration() # for now just create a new cfg
 
 def evaluate_population(pop):
     """ 
@@ -605,9 +607,11 @@ def evaluate_population(pop):
             if x in p:
                print("OPT eval", x, "=", p[x])
         '''
-        p['energy'] = random.random()
-        p['latency'] = random.random()
-        p['memory'] = random.random()
+
+        met = lambda p: random.random()/1e-4 if p != 1.0 else float("inf")
+        p['energy'] = met(p['accuracy_drop']) 
+        p['latency'] = met(p['accuracy_drop']) 
+        p['memory'] = met(p['accuracy_drop']) 
 
         '''for x in ["memory", "latency", "accuracy_drop", "energy"]:
             if x in p:
@@ -692,9 +696,9 @@ def wrap_train_test(gene):
         model = YOLO(save_cfg)
         model.to(device)
     except RuntimeError as rte:
-        return runid, 0
+        return runid, -float("inf")
     except ValueError as ve:
-        return runid, 0
+        return runid, -float("inf")
 
     # model.summary()
 
@@ -791,11 +795,16 @@ def run_NSGA2(metrics, inshape, p_size = 2, q_size = 2, generations=5, mutation_
         if g==0:
             # random initial population Pt
             parent = []
+            # add the original yolov8n.yaml
+            save_cfg = f'{args.new}/yolov8n.yaml'
+            shutil.copyfile(args.load_cfg, save_cfg)
+            parent.append({"gene" : "yolov8n" }) 
+            print_("Mother (yolov8n.yaml) added")
             for i in range(p_size):
                 # parent.append({"gene" : random_configuration(inshape[0], inshape[1], inshape[2], inshape[3]) }) # (insize, inchannels, incapsules, n_classes)
                 parent.append({"gene" : random_configuration() }) 
-
             evaluate_population(parent)
+            json.dump(parent, open(f"{args.save_dir}/{args.output}_gen_{g}.json", "wt"))
             continue
         # generate offsprings Qt
         offsprings = []
@@ -849,12 +858,10 @@ def run_NSGA2(metrics, inshape, p_size = 2, q_size = 2, generations=5, mutation_
 
             '''
             
-            offspring_cfg = crossover(par_a["gene"], par_b["gene"])
+            offspring = crossover(par_a["gene"], par_b["gene"])
             if random.random() < mutation_rate:
-                mutate(offspring_cfg) 
-            offspring = str(time.time()).replace('.','')
-            save_cfg = f'{args.new}/{offspring}.yaml'
-            dump_yaml(offspring_cfg, save_cfg)
+                offspring = mutate(offspring) 
+            
             offsprings.append({'gene':offspring})
 
         evaluate_population(offsprings)
@@ -871,9 +878,10 @@ def run_NSGA2(metrics, inshape, p_size = 2, q_size = 2, generations=5, mutation_
         next_parent = []
         while len(next_parent) < p_size:
             # select pareto frontier
-            pareto = PyBspTreeArchive(len(metrics)).filter([[x[m] for m in metrics] for x in population], returnIds=True)
+            pareto = PyBspTreeArchive(len(metrics)).filter([[x[m] for m in metrics] for x in population], returnIds=True) 
 
             current_pareto = [population[i] for i in pareto]
+            # we cant know beforehand how many elements are gonna be returned (for pareto)
             missing = p_size - len(next_parent)
 
             if(len(current_pareto) <= missing): # can we put all pareto frontier to the next parent
@@ -881,8 +889,9 @@ def run_NSGA2(metrics, inshape, p_size = 2, q_size = 2, generations=5, mutation_
             else: # distance crowding 
                 # breakpoint here
                 next_parent += crowding_reduce(current_pareto, missing, metrics)
+                # current_pareto[:missing]
 
-            for i in reversed(sorted(pareto)): # delete nodes from the current population
+            for i in reversed(sorted(pareto)): # delete nodes from the current population (selected ones are removed for further search)
                 population.pop(i)
 
         parent = next_parent
@@ -902,24 +911,6 @@ def run_NSGA2(metrics, inshape, p_size = 2, q_size = 2, generations=5, mutation_
     print("Filt pareto combinations: %d in %f seconds" % (len(ret), time.time() - start))
 
     return ret
-'''#def main(argv=None):
-    # this is the very main script!
-#    rets = run_NSGA2(metrics=["accuracy_drop", "energy", "memory", "latency"])
-#    # todo : save return population as json
-#    outfile = "results.json"
-#    json.dump(rets, open(outfile, "wt"), )
-'''
-'''def margin_loss(y_true, y_pred):
-    """
-    Margin loss for Eq.(4). When y_true[i, :] contains not just one `1`, this loss should work too. Not test it.
-    :param y_true: [None, n_classes]
-    :param y_pred: [None, num_capsule]
-    :return: a scalar loss value.
-    """
-    L = y_true * K.square(K.maximum(0., 0.9 - y_pred)) + \
-        0.5 * (1 - y_true) * K.square(K.maximum(0., y_pred - 0.1))
-
-    return K.mean(K.sum(L, 1))
 '''
 # '''
 def train(model:YOLO, data, args):
@@ -935,9 +926,9 @@ def train(model:YOLO, data, args):
     runid = uuid.uuid1().hex
     print("### runid:", runid)
 
-    for epoch in range(args.epochs):
-        print(f"Epoch {epoch}/{args.epochs} - assumption")
-    # model.train(data=data, epochs=args.epochs, workers=1,imgsz=80)
+    # for epoch in range(args.epochs):
+    #     print(f"Epoch {epoch}/{args.epochs} - assumption")
+    model.train(data=data, epochs=args.epochs, workers=1,imgsz=96)
     # callbacks and gpus # not handled ... !
     # explicity compiling, and data generators not required yet
 
@@ -1013,8 +1004,9 @@ def train(model:YOLO, data, args):
 def test(model:YOLO, data, args):
     metrics = model.val(data)
 
-    cm = metrics.confusion_matrix.matrix
-    test_acc = np.trace(cm)/np.sum(cm)
+    # for now just call it test_acc
+    test_acc = metrics.results_dict['metrics/mAP50(B)']
+
 
     '''x_test, y_test = data
     y_pred, x_recon = model.predict(x_test, batch_size=100)
@@ -1025,79 +1017,6 @@ def test(model:YOLO, data, args):
     # test_acc = random.random()
     return test_acc
 # '''
-
-
-'''def load_mnist():
-    # the data, shuffled and split between train and test sets
-    from keras.datasets import mnist
-    (x_train, y_train), (x_test, y_test) = mnist.load_data()
-
-    x_train = x_train.reshape(-1, 28, 28, 1).astype('float32') / 255.
-    x_test = x_test.reshape(-1, 28, 28, 1).astype('float32') / 255.
-    y_train = utils.to_categorical(y_train.astype('float32'))
-    y_test = utils.to_categorical(y_test.astype('float32'))
-    return (x_train, y_train), (x_test, y_test)
-'''
-'''def load_fmnist():
-    # the data, shuffled and split between train and test sets
-    from keras.datasets import fashion_mnist
-    (x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
-
-    x_train = x_train.reshape(-1, 28, 28, 1).astype('float32') / 255.
-    x_test = x_test.reshape(-1, 28, 28, 1).astype('float32') / 255.
-    y_train = utils.to_categorical(y_train.astype('float32'))
-    y_test = utils.to_categorical(y_test.astype('float32'))
-    return (x_train, y_train), (x_test, y_test)
-'''
-'''def load_cifar10():
-    from keras.datasets import cifar10
-    (x_train, y_train), (x_test, y_test) = cifar10.load_data()  
-    x_train = x_train.astype('float32') / 255.
-    x_test = x_test.astype('float32') / 255.
-    y_train = utils.to_categorical(y_train.astype('float32'))
-    y_test = utils.to_categorical(y_test.astype('float32'))
-    
-    # data preprocessing 
-    x_train[:,:,:,0] = (x_train[:,:,:,0]-123.680)
-    x_train[:,:,:,1] = (x_train[:,:,:,1]-116.779)
-    x_train[:,:,:,2] = (x_train[:,:,:,2]-103.939)
-    x_test[:,:,:,0] = (x_test[:,:,:,0]-123.680)
-    x_test[:,:,:,1] = (x_test[:,:,:,1]-116.779)
-    x_test[:,:,:,2] = (x_test[:,:,:,2]-103.939)
-    
-    return (x_train, y_train), (x_test, y_test)
-'''
-
-
-'''def load_cifar100():
-    from keras.datasets import cifar100
-    (x_train, y_train), (x_test, y_test) = cifar100.load_data()
-    x_train = x_train.astype('float32') / 255.
-    x_test = x_test.astype('float32') / 255.
-    y_train = utils.to_categorical(y_train.astype('float32'))
-    y_test = utils.to_categorical(y_test.astype('float32'))
-        
-    # data preprocessing 
-    x_train[:,:,:,0] = (x_train[:,:,:,0]-123.680)
-    x_train[:,:,:,1] = (x_train[:,:,:,1]-116.779)
-    x_train[:,:,:,2] = (x_train[:,:,:,2]-103.939)
-    x_test[:,:,:,0] = (x_test[:,:,:,0]-123.680)
-    x_test[:,:,:,1] = (x_test[:,:,:,1]-116.779)
-    x_test[:,:,:,2] = (x_test[:,:,:,2]-103.939)
-    
-    return (x_train, y_train), (x_test, y_test)
-'''
-'''# def load_svhn():
-#     (x_train, y_train), (x_test, y_test) = svhn.load_data()  
-#     x_train = x_train.astype('float32') / 255.
-#     x_test = x_test.astype('float32') / 255.
-#     y_train = y_train.astype('float32')
-#     y_test = y_test.astype('float32')
-        
-#     return (x_train, y_train), (x_test, y_test)
-'''
-
-
 
 if __name__ == "__main__":
     import os
@@ -1116,6 +1035,7 @@ if __name__ == "__main__":
     parser.add_argument('--population', default=50, type=int)
     parser.add_argument('--offsprings', default=100, type=int)
     parser.add_argument('--generations', default=5, type=int)
+    parser.add_argument('--mutation_rate', default=0.1, type=float)
     parser.add_argument('--output', default="out_DAT", type=str)
     parser.add_argument('--timeout', default=0, type=int, help="Maximal time in seconds for the training, zero = not set")
     parser.add_argument('--gpus', default=1, type=int)
@@ -1153,29 +1073,6 @@ if __name__ == "__main__":
 
     # load data
     # no need using coco dataset (and YOLO will handle it)
-    '''
-    if args.dataset=='mnist':
-        (x_train, y_train), (x_test, y_test) = load_mnist()
-        inshape=[28, 1, 1, 10]
-    elif args.dataset=='fmnist' or args.dataset=='fashion_mnist':
-        (x_train, y_train), (x_test, y_test) = load_fmnist()
-        inshape=[28, 1, 1, 10]
-    elif args.dataset=='cifar10':
-        from keras.datasets import cifar10
-        (x_train, y_train), (x_test, y_test) = load_cifar10()
-        inshape=[32,3,1,10]
-    elif args.dataset=='cifar100':
-        from keras.datasets import cifar100
-        (x_train, y_train), (x_test, y_test) = load_cifar100()
-        inshape=[32,3,1,100]
-    elif args.dataset=='svhn':
-        (x_train, y_train), (x_test, y_test) = load_svhn()
-        inshape=[32,3,1,10]
-
-    else:
-        (x_train, y_train), (x_test, y_test) = load_mnist()
-        inshape=[28, 1, 1, 10]
-    '''
     inshape = [-1,-1,-1,-1]
 
     # cache for reshaped inputs
@@ -1184,7 +1081,7 @@ if __name__ == "__main__":
 
 
     np.random.seed(10)
-    rets = run_NSGA2(metrics=["accuracy_drop", "energy", "memory", "latency"], inshape=inshape, p_size=args.population, q_size=args.offsprings, generations=args.generations)
+    rets = run_NSGA2(metrics=["accuracy_drop", "energy", "memory", "latency"], inshape=inshape, p_size=args.population, q_size=args.offsprings, generations=args.generations,mutation_rate=args.mutation_rate)
     outfile = f"{args.save_dir}/{args.output}_results.json"
     json.dump(rets, open(outfile, "wt"), )
 
