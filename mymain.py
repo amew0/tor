@@ -2,7 +2,7 @@
 # my draft of NSGA2 algorithm for YOLO (for now yeah)
 import gc
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "max_split_size_mb:128"
 
 import torch
@@ -608,7 +608,7 @@ def evaluate_population(pop):
                print("OPT eval", x, "=", p[x])
         '''
 
-        met = lambda p: random.random()/1e-4 if p != 1.0 else float("inf")
+        met = lambda p: 1 - random.random()*1e-4 if p != 1.0 else float("inf")
         p['energy'] = met(p['accuracy_drop']) 
         p['latency'] = met(p['accuracy_drop']) 
         p['memory'] = met(p['accuracy_drop']) 
@@ -641,6 +641,25 @@ def genestr(gene):
     return str(gene).replace(" ", "")
 # '''
 # '''
+def trainNtest(model,data='coco128.yaml'):
+    import uuid
+    runid = uuid.uuid1().hex
+    print_("### runid:", runid)
+    
+    patience = int(args.epochs / 3)
+    def trainer(epochs):
+        model.train(data=data, epochs=epochs, workers=1,imgsz=96)
+        metrics = model.val(data)
+        # for now just call it test_acc
+        test_acc = metrics.results_dict['metrics/mAP50(B)']
+        return test_acc
+    
+    test_acc = trainer(patience)
+    if test_acc > 0:
+        test_acc = trainer(args.epochs - patience)
+
+    return runid, test_acc
+
 def wrap_train_test(gene):
     global x_train, y_train, x_test, y_test
     global x_train_shapes, x_test_shapes
@@ -713,7 +732,7 @@ def wrap_train_test(gene):
     # not handled ... !
     '''# train or test
     if args.weights is not None:  # init the model weights with provided one
-        model.load_weights(args.weights)'''
+        model.load_weights(args.weights)
     if not args.testing:
         # if gene[len(gene)-1][0]==2:
         #     x_train = resize(x_train, gene[0][1]) #64
@@ -722,14 +741,16 @@ def wrap_train_test(gene):
         # elif gene[len(gene)-1][0]==1:
         
         # not handled ... !
-        '''print("Train shapes:", x_train.shape, y_train.shape)'''
+        # print("Train shapes:", x_train.shape, y_train.shape)
         # runid, _ = train(model=model, data=((x_train_current, y_train), (x_test_current, y_test)), args=args)
         runid, _ = train(model=model, data="coco128.yaml",args=args)
     else:  # as long as weights are given, will run testing
         if args.weights is None:
             print('No weights are provided. Will test using random initialized weights.')
     # test_acc = test(model=eval_model, data=(x_test_current, y_test), args=args)
-    test_acc = test(model=model, data="coco128.yaml", args=args)
+    test_acc = test(model=model, data="coco128.yaml", args=args)'''
+    runid,test_acc = trainNtest(model=model,data='coco128.yaml')
+
     torch.cuda.empty_cache()
     gc.collect()
     # tf.keras.backend.clear_session()
