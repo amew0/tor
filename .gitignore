@@ -5,3 +5,5 @@ __pycache__/
 .vscode/
 new/
 results
+pcc.csv
+pcc.ipynb
